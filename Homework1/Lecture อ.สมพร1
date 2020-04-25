@@ -1,0 +1,376 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 1. \"Introduction\"\n",
+    "\n",
+    "    Optimization Problem เป็นวิธีการที่จะจัดการกับการหาทางที่ดีที่สุด ในการแก้ปัญหาภายใต้เงื่อนไนั้นๆที่มีอยู่อย่างจำกัดบนการกระทำใดๆที่ทำให้งานสำเร็จ  ซึ่งปัญหาเหล่านั้นสามารถถูกเขียนให้อยู่ในรูปของ \"Optimization Problem\" ได้\n",
+    "    \n",
+    "   Example\n",
+    "   - เลือกการลงทุนใน port ที่ minimize risk และ maximize return\n",
+    "   - Maximize กำไร ที่ได้รับจากการขายสินค้าที่ต่างชนิดกัน\n",
+    "   - ออกแบบรูปแบบของอากาศยานเพื่อ Maximize the aircraft performance และ Minimize ต้นทุนในการก่อสร้าง"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 2. \"The standard form of the Optimization Problem\"\n",
+    "\n",
+    "Minimize f(x),x̄ ∈ R^n\n",
+    "subj to x̄ ∈ Ω\n",
+    "\n",
+    "- where x̄ is a collumn vecter with a n eliments and x̄^T is a row vector.\n",
+    "\n",
+    "x̄ =\n",
+    "$\n",
+    "\\left[\n",
+    "\\begin{array}{1}\n",
+    "x1 \\\\ x2 \\\\ {\\displaystyle \\vdots } \\\\ xn\n",
+    "\\end{array}\n",
+    "\\right]\n",
+    "$\n",
+    ",\n",
+    "x̄^T =\n",
+    "$\n",
+    "\\left[\n",
+    "\\begin{array}{1}\n",
+    "x1  \\  x2  \\  ... \\   xn\n",
+    "\\end{array}\n",
+    "\\right]\n",
+    "$\n",
+    "\n",
+    "or\n",
+    "\n",
+    "x̄ =\n",
+    "$\n",
+    "\\left[\n",
+    "\\begin{array}{1}\n",
+    "x1 \\\\ x2 \\\\ {\\displaystyle \\vdots } \\\\ xn\n",
+    "\\end{array}\n",
+    "\\right]\n",
+    "$\n",
+    ",\n",
+    "$\n",
+    "\\left[\n",
+    "\\begin{array}{1}\n",
+    "x1  \\  x2  \\  ... \\   xn\n",
+    "\\end{array}\n",
+    "\\right]^T\n",
+    "$"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The Euclidean length : ||x̄|| of x̄ ∈ R^n\n",
+    "\n",
+    "<img src=\"images/83514442_2441521626109796_3709054123836964864_n.jpg\" width=500 align=\"left\">"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Example ให้ x̄ =\n",
+    "$\n",
+    "\\left[\n",
+    "\\begin{array}{1}\n",
+    "1 \\\\ 2 \\\\ 3\n",
+    "\\end{array}\n",
+    "\\right]\n",
+    "$\n",
+    "หาขนาดของ x̄\n",
+    "\n",
+    "sol จาก ||x̄|| = (∑ x^2)^1/2 = √ 1^2+2^2+3^2 = √ 14"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "$\\rightarrow$เราสามารถแก้ปัญหา Maximization ได้โดยการ converted Maximization Problem ให้เป็น Minimization Problem ได้โดยใส่เครื่องหมายลบไปที่ objective funcetion\n",
+    "    \n",
+    "The Problem : Max f(x) subj to x̄ ∈ Ω $\\rightarrow$ Min -f(X) subj to x̄ ∈ Ω"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## The Feasible Region :  Ω\n",
+    "<img src=\"images/82383887_2919264494751362_8329719170828599296_n.jpg\" width=300 align=\"left\">"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#Standard Form#\n",
+    "\n",
+    "Min f(x̄),x̄ ∈ R^n ,\n",
+    "<br>subj to ei(x̄)= 0 ; i = 1,...,m\n",
+    "<br> ei(x̄)<= 0 ; i = 1,...,n\n",
+    "\n",
+    "* if contrian อยู่ในรูป >= must แปลงให้อยู่ในรูป <="
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Example1 \"Post office pereil Problem\"\n",
+    "\n",
+    "กำหนดให้ผลบวกของความยาว(length)กับเส้นรอบวง(girth)ของพัสดุที่จะสามารถส่งผ่าน Post ได้ต้องมีค่าไม่เกิน 108 เมตร และเส้นรอบวง(girth)เป็นระยะตั้งฉากกับความยาวรอบๆพัสดุ ถาม  พัสดุนี้ควรมีขนาด(dimension)เท่าไหร่ โดยกำหนดให้พัสดุนี้มีด้านเป็นมุมฉาก(Rectangular Side) จึงจะทำให้มีปริมาตร(Volumn)มากที่สุดที่จะสามารถส่งผ่านวัสดุในครั้งนี้ได้\n",
+    "\n",
+    "**sol :**\n",
+    "\n",
+    "1.กำหนดตัวแปร\n",
+    "    - ให้ x1 = ความยาวของพัสดุ(length)\n",
+    "    - ให้ x2 = ความกว้างของพัสดุ(width)\n",
+    "    - ให้ x3 = ความลึกของพัสดุ(dipth)\n",
+    "2.ตั้ง Objective Funcetion\n",
+    "\n",
+    "จาก ปริมาตรสี่เหลี่ยมมุมฉาก = กว้างxยาวxสูง\n",
+    "\n",
+    "จะได้ Max Volumne :  f(x̄) = x1 x2 x3\n",
+    "\n",
+    "3.กำหนดเงื่อนไขจากโจทย์\n",
+    "\n",
+    "- จากผลบวกของความยาวกับเส้นขอบวงต้องไม่เกิน 1.8 เมตร\n",
+    "    - จะได้ subj to 1 ; x1+ (2x2 + 2x3) <= 1.8 เมตร\n",
+    "- จาก x1, x2, x3 เป็นความยาว *ห้ามติดลบ\n",
+    "    - จะได้ subj to 2 ; x1, x2, x3 >= 0\n",
+    "- จากพัสดุมีด้านเป็นมุมฉาก ดั้งนั้น ด้านยาว(x1) ห้ามสั้นกว่าด้านกว้าง(x2) และด้านลึก(x3)\n",
+    "    - จะได้ x2 <= x1 และ x3 <= x1\n",
+    "    \n",
+    "4.Convert Max ให้อยู่ในรูป Standard Form \n",
+    "\n",
+    "- จาก stardard form ของ Max f(x) = Min -f(x)\n",
+    "- จะได้ stardard form ของ Min f(x̄) = -x1 x2 x3\n",
+    "- จะได้ subj to ;\n",
+    "    - c1 : x1+ (2x2 + 2x3) <= 1.8\n",
+    "    - c2 : -x1 <= 0\n",
+    "    - c3 : -x2 <= 0\n",
+    "    - c4 : -x3 <= 0\n",
+    "    - c5 : x2 - x1 <= 0\n",
+    "    - c6 : x3 - x1 <= 0\n",
+    "    \n",
+    "  <img src=\"images/82301929_251760875795621_4119776726752428032_n.jpg\" width=300 align=\"left\">"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Example2\n",
+    "\n",
+    "นักลงทุนมี 2 Asset ให้เลือกลงทุนได้แก่ Property trust และ Share trust โดยจะเลือกลงทุนในอย่างใดอย่างหนึ่ง หรือทั้งคู่ก็ได้ นักลงทุนตัดสินใจลงทุนใน Property trust อย่างน้อย 20% แต่ไม่เกิน 80% ของสินทรัพย์ และลงทุนอย่างน้อย10% ใน Share trust โดยนักลงทุน มีผลตอบแทนที่คาดหวัง 5% ต่อปี ใน Property trust และ 12% ต่อปีใน Share trust การลงทุนแต่ละประเภทมีความเสี่ยง ซึ่งนักลงทุนได้ตัดสินใจสร้าง Model จาก Historical Variance ในอัตราผลตอบแทนของการลงทุนทั้งสอง ค่า Covariance ในตารางแสดงว่า Property trust มีความเสี่ยง(variance = 30%) น้อยกว่า Share trust(variance = 45%) และอัตราผลตอบแทนของการลงทุนทั้งสองนี้มีแนวโน้มไปในทิศทางตรงข้ามกัน(covariance = -20%)\n",
+    "\n",
+    "<img src=\"images/82234891_2582690701854120_5702317741189365760_n.jpg\" width=300 align=\"left\">\n",
+    "\n",
+    "\n",
+    "1.1) ให้เขียนปัญหานี้ให้เป็นปัญหาของ Optimization โดยต้องการ Maximize return ในการ Allocate สินทรัพย์ เขียนในรูป Model ทาง math เมื่อมีเงื่อนไขอะไรบ้าง\n",
+    "\n",
+    "1.2) ให้เขียนปัญหานี้ในรูป Minimization Problem โดยการ Minimize Risk ในการ Allocate สินทรัพย์\n",
+    "\n",
+    "1.3) ให้เขียนปัญหานี้ในรูป Minimization Problem เพื่อหาสัดสวนการลงทุนที่ทำให้ weigthed ของ Expected Return และความเสี่ยง มีค่าต่ำสุด"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**sol :  1.1) want Maximize Return**\n",
+    "\n",
+    "1. กำหนดตัวแปร\n",
+    "    - กำหนดให้ x1 = สัดส่วนในการลงทุนใน Property trust\n",
+    "    - กำหนดให้ x2 = สัดส่วนในการลงทุนใน Share trust\n",
+    "    \n",
+    "  เนื่องจากนักลงทุนเลือกลงทุนอย่างใดอย่างหนึ่งหรือทั้งคู่ก็ได้\n",
+    "  \n",
+    "  ดังนั้น 0 <= xi <= 1 ; i = 1,2 และ x1 + x2 <= 1\n",
+    "\n",
+    "2. กำหนดเงื่อนไข(constain)\n",
+    "    - จะได้ 20% <= x1 <= 80% และ 10% <= x2 <= 1\n",
+    "    \n",
+    "3. หา Feasible Region : Ω จาก constain\n",
+    "    - <img src=\"images/82357381_169839650781473_2532905633661845504_n.jpg\" width=500 align=\"left\">"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "4. กำหนดให้ Objective Function\n",
+    "    - จาก Expected Return ต้อง = 5%x1 + 12%x2 = 0.05x1+ 0.12x2\n",
+    "    - ได้ r =\n",
+    "$\n",
+    "\\left[\n",
+    "\\begin{array}{1}\n",
+    "0.05 \\\\ 0.12 \n",
+    "\\end{array}\n",
+    "\\right]\n",
+    "$\n",
+    ",\n",
+    "x̄ =\n",
+    "$\n",
+    "\\left[\n",
+    "\\begin{array}{1}\n",
+    "x1 \\\\ x2 \n",
+    "\\end{array}\n",
+    "\\right]\n",
+    "$\n",
+    "    \n",
+    "    - จะได้ Max Expected Return : f(x̄) = r^Tx̄ = x̄^Tr ,x̄ ∈ R^2 subj to x̄ ∈ Ω\n",
+    "    \n",
+    "        f(x̄) =\n",
+    "$\n",
+    "\\left[\n",
+    "\\begin{array}{1}\n",
+    "x1 \\ x2 \n",
+    "\\end{array}\n",
+    "\\right]\n",
+    "$\n",
+    "$\n",
+    "\\left[\n",
+    "\\begin{array}{1}\n",
+    "0.05 \\\\ 0.12 \n",
+    "\\end{array}\n",
+    "\\right]\n",
+    "$\n",
+    "= 0.05x1+ 0.12x2\n",
+    "\n",
+    "<img src=\"images/83018375_172605994110091_4205523051577606144_n.jpg\" width=300 align=\"left\">"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**Sol : 1.2) want Minimize risk**\n",
+    "\n",
+    "1. เนื่องจาก ความเสี่ยงในการลงทุนของ Portfolio นี้ถูกวัดด้วยค่า covariance ของ Portfolio\n",
+    "    - จะได้ Min Risk : x̄^TCx̄ = $\n",
+    "\\left[\n",
+    "\\begin{array}{1}\n",
+    "x1 \\ x2 \n",
+    "\\end{array}\n",
+    "\\right]\n",
+    "$\n",
+    "$\n",
+    "\\left[\n",
+    "\\begin{array}{1}\n",
+    "0.3 & -0.2\\\\ -0.2 & 0.45 \n",
+    "\\end{array}\n",
+    "\\right]\n",
+    "$\n",
+    "$\n",
+    "\\left[\n",
+    "\\begin{array}{1}\n",
+    "x1 \\\\ x2 \n",
+    "\\end{array}\n",
+    "\\right]\n",
+    "$\n",
+    "= 0.3x1^2 + 0.45X2^2 - 0.4x1x2\n",
+    "\n",
+    "2. จะได้เป็น objective Funcetion เป็น\n",
+    "\n",
+    "    - Min fc(x̄) = x̄^TCx̄ subj to x̄ ∈ Ω"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**sol 1.3)นักลงทุนต้องการรวม 2 objective เข้าด้วยกัน**\n",
+    "\n",
+    "ซึ่งก้คือต้องการให้ได้ maximize return ในขณะเดียวกัน ก็ต้องการให้ minimize risk ด้วย\n",
+    "<img src=\"images/82416175_786364335170877_3065351312007757824_n.jpg\" width=700 align=\"left\">"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Example3\n",
+    "\n",
+    "Mortgage team มีวงเงินในการเลือกลงทุน $100,000,000 ในสินทรัพย์ 5 ประเภท โดยมี Return และ Risk ตามตารางต่อไปนี้ \n",
+    "\n",
+    "Loan Investment | Return  | Risk\n",
+    "------------ | ------------- | -------------\n",
+    "1. First mortgage | 9| 3\n",
+    "2. Second mortgage | 12| 6\n",
+    "3. Personal loan| 15| 8\n",
+    "4. Commocial loan| 8| 2\n",
+    "5. Government Securities| 6| 1\n",
+    "\n",
+    "เงินส่วนที่เหลือใดๆ ต้องนำไปลงทุนใน saving account ซึ่งไม่มี risk และ ได้ return 3%  เป้าหมายของMortgage team นี้คือ ต้อง allocate เงินใน Loan 5 ประเภทนี้ โดยต้องการ\n",
+    "    \n",
+    "    a)Maximize the average return\n",
+    "    b)มี Average risk ไม่เกิน 5 ตัว (ค่า average เป็นสัดส่วนของเงินลงทุนทั้งหมด แต่ไม่รวม เงินส่วนsaving account)\n",
+    "    c)ลงทุนอย่างน้อย 20% ใน commocial loan\n",
+    "    d)จำนวนเงินที่ลงทุนใน second mortgage รวมกับ personal loan ต้องไม่สูงกว่าเงินลงทุนใน First mortgage"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**sol :**\n",
+    " \n",
+    "\n",
+    "1. กำหนดตัวแปร\n",
+    "    - ให้ xi = จำนวนเงินที่ลงทุนใน investment ; i = 1,...,5\n",
+    "    - ให้ x6 = จำนวนเงินที่ลงทุนใน saving account\n",
+    "2. สร้าง object function\n",
+    "    - จะได้ Max Return ; (x̄) = 0.09x1 + 0.12x2 + 0.15x3 + 0.08x4 + 0.06x5 + 0.03x6\n",
+    "3. กำหนดเงื่อนไข \n",
+    "    - จะได้ subj to \n",
+    "        - c1 ; ∑xi (โดยที่ i = 1,...,5) = 100,000,000\n",
+    "        - c2 ; 3x1 + 6x2 + 8x3 + 2x4 + x5 / x1 + x2 + x3 + x4 + x5 <= 5\n",
+    "        - c3 ; x4 >= 0.2(x1 + x2 + x3 + x4 + x5) หรือ  -0.2x1 -0.2x2 - 0.2x3 + 0.8x4 - 0.2x5 >= 0\n",
+    "        - c4 ; x2 + x3 >= x1\n",
+    "               x2 + x3 - x1 >= 0\n",
+    "4. Answer\n",
+    "    - จะได้ return 12% โดยที่ลงทุนใน First mortgage 40% , 40% ใน Personal loan และ 20% ใน Commocial loan ถึงจะทำให้ได้ Maximize Returnโดยที่ i = 1,...,5) = 100,000,000\n",
+    "        - c2 ; 3x1 + 6x2 + 8x3 + 2x4 + x5 / x1 + x2 + x3 + x4 + x5 <= 5\n",
+    "        - c3 ; x4 >= 0.2(x1 + x2 + x3 + x4 + x5) หรือ  -0.2x1 -0.2x2 - 0.2x3 + 0.8x4 - 0.2x5 >= 0\n",
+    "        - c4 ; x2 + x3 >= x1\n",
+    "          หรือ x2 + x3 - x1 >= 0"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.6"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
